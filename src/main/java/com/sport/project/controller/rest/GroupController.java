@@ -4,7 +4,6 @@ import com.sport.project.dto.GroupCreationDTO;
 import com.sport.project.dto.GroupDTO;
 import com.sport.project.dto.StudentDTO;
 import com.sport.project.exception.EntityNotFoundException;
-import com.sport.project.service.StudentService;
 import com.sport.project.service.impl.GroupServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -28,9 +27,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/api/group")
 public class GroupController {
-
     private final GroupServiceImpl groupService;
-    private final StudentService studentService;
 
     @Operation(summary = "Создание группы", description = "Возвращает созданную группу в виде JSON")
     @ApiResponses({
@@ -45,7 +42,7 @@ public class GroupController {
 
     @Operation(summary = "Получить все группы", description = "Возвращает список всех учебных групп")
     @ApiResponse(responseCode = "200", description = "Группы успешно получены")
-    @GetMapping("/get-all")
+    @GetMapping("/getAll")
     public ResponseEntity<List<GroupDTO>> getAll() {
         return ResponseEntity.ok(groupService.findAll());
     }
@@ -68,7 +65,7 @@ public class GroupController {
         @ApiResponse(responseCode = "200", description = "Группа найдена"),
         @ApiResponse(responseCode = "404", description = "Группа не найдена")
     })
-    @GetMapping("/by-name")
+    @GetMapping("/getByName")
     public ResponseEntity<GroupDTO> getGroupByName(
             @Parameter(description = "Название группы", example = "ИУ7-12Б")
             @RequestParam String name) {
@@ -77,7 +74,7 @@ public class GroupController {
 
     @Operation(summary = "Получить группы по институту", description = "Возвращает список групп по названию института")
     @ApiResponse(responseCode = "200", description = "Группы найдены")
-    @GetMapping("/by-institute")
+    @GetMapping("/getByInstitute")
     public ResponseEntity<List<GroupDTO>> getGroupByInstitute(
             @Parameter(description = "Название института", example = "ИУ")
             @RequestParam String institute) {
@@ -111,7 +108,7 @@ public class GroupController {
 
     @Operation(summary = "Получить количество студентов в группе по айди группы", description = "Возвращает количество студентов в группе")
     @ApiResponse(responseCode = "200", description = "Количество студентов успешно получено")
-    @GetMapping("/students-count/{groupId}")
+    @GetMapping("/studentsCount/{groupId}")
     public Map<String, Integer> getStudentCount(
             @Parameter(description = "ID группы", example = "1")
             @PathVariable(name = "groupId") Integer groupId) {
@@ -121,7 +118,7 @@ public class GroupController {
 
     @Operation(summary = "Проверка, является ли группа пустой (не содержит студентов)", description = "Возвращает true, если группа пустая, иначе false")
     @ApiResponse(responseCode = "200", description = "Группа пустая")
-    @GetMapping("/is-empty/{groupId}")
+    @GetMapping("/isEmpty/{groupId}")
     public boolean isEmpty(
             @Parameter(description = "ID группы", example = "1")
             @PathVariable(name = "groupId") Integer groupId) throws EntityNotFoundException {
@@ -130,7 +127,7 @@ public class GroupController {
 
     @Operation(summary = "Получение студентов группы с информацией о посещаемости за период", description = "Возвращает список студентов с посещаемостью за период")
     @ApiResponse(responseCode = "200", description = "Посещаемость группы за период найдена")
-    @GetMapping("/visits-group-by-range")
+    @GetMapping("/visitsGroupByRange")
     public ResponseEntity<?> getStudentsWithAttendance(
             @Parameter(description = "ID группы", example = "1")
             @RequestParam(name = "groupId") Integer groupId,
@@ -145,7 +142,7 @@ public class GroupController {
 
     @Operation(summary = "Перевод всех студентов из одной группы в другую", description = "Изменяет группу всех студентов по айди ")
     @ApiResponse(responseCode = "200", description = "Группа успешно изменена")
-    @PutMapping("/transfer-students")
+    @PutMapping("/transferStudents")
     public ResponseEntity<Void> transferStudents(
             @Parameter(description = "ID старой группы", example = "1")
             @RequestParam(name = "fromGroupId") Integer fromGroupId,
@@ -174,7 +171,7 @@ public class GroupController {
             @ApiResponse(responseCode = "204", description = "Группа успешно удалена"),
             @ApiResponse(responseCode = "404", description = "Группа не найдена")
     })
-    @DeleteMapping("/delete-by-name")
+    @DeleteMapping("/deleteByName")
     public ResponseEntity<Void> deleteByName(
             @Parameter(description = "Название группы", example = "УВП-111")
             @RequestParam(name = "groupName") String groupName) throws EntityNotFoundException {

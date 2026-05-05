@@ -2,7 +2,6 @@ package com.sport.project.controller.rest;
 
 import com.sport.project.dto.*;
 import com.sport.project.exception.EntityNotFoundException;
-import com.sport.project.service.DisciplineService;
 import com.sport.project.service.impl.DisciplineServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -30,7 +29,7 @@ public class DisciplineController {
 
     @Operation(summary = "Получить все дисциплины", description = "Возвращает список всех учебных дисциплин")
     @ApiResponse(responseCode = "200", description = "Дисциплины успешно получены")
-    @GetMapping(path = "/find-all")
+    @GetMapping(path = "/findAll")
     public ResponseEntity<List<DisciplineDTO>> findAll() {
         return ResponseEntity.ok(disciplineService.findAll());
     }
@@ -52,7 +51,7 @@ public class DisciplineController {
         @ApiResponse(responseCode = "200", description = "Дисциплина найдена"),
         @ApiResponse(responseCode = "404", description = "Дисциплина не найдена")
     })
-    @GetMapping("/by-name")
+    @GetMapping("/findByName")
     public ResponseEntity<DisciplineDTO> findByName(
             @Parameter(description = "Название дисциплины", example = "Физическая культура")
             @RequestParam(name = "name") String name) throws com.sport.project.exception.EntityNotFoundException {
@@ -65,7 +64,7 @@ public class DisciplineController {
         @ApiResponse(responseCode = "200", description = "Занятия найдены"),
         @ApiResponse(responseCode = "404", description = "Дисциплина не найдена")
     })
-    @GetMapping("/by-discipline-id/{disciplineId}/lessons")
+    @GetMapping("/findByDisciplineId/{disciplineId}/lessons")
     public ResponseEntity<List<LessonDTO>> getLessonsByDisciplineId(
             @Parameter(description = "ID дисциплины", example = "1")
             @PathVariable(name = "disciplineId") Integer disciplineId) throws com.sport.project.exception.EntityNotFoundException {
@@ -77,7 +76,7 @@ public class DisciplineController {
         @ApiResponse(responseCode = "200", description = "Занятия найдены"),
         @ApiResponse(responseCode = "404", description = "Дисциплина не найдена")
     })
-    @GetMapping("/by-discipline-name/{disciplineName}/lessons")
+    @GetMapping("/findByDisciplineName/{disciplineName}/lessons")
     public ResponseEntity<List<LessonDTO>> getLessons(
             @Parameter(description = "Название дисциплины", example = "Физическая культура")
             @PathVariable(name = "disciplineName") String disciplineName) throws EntityNotFoundException {
@@ -86,7 +85,7 @@ public class DisciplineController {
 
     @Operation(summary = "Проверить существование дисциплины по названию", description = "Проверяет существование дисциплины по названию")
     @ApiResponse(responseCode = "200", description = "Результат проверки")
-    @GetMapping(path = "/is-exists-by-name")
+    @GetMapping(path = "/isExistsByName")
     public boolean existsByName(
             @Parameter(description = "Название дисциплины", example = "Физическая культура")
             @RequestParam(name = "disciplineName") String disciplineName) {
@@ -112,7 +111,7 @@ public class DisciplineController {
         @ApiResponse(responseCode = "201", description = "Дисциплина успешно создана"),
         @ApiResponse(responseCode = "400", description = "Дисциплина с таким названием уже существует")
     })
-    @PostMapping(path = "/create-by-name")
+    @PostMapping(path = "/createByName")
     public ResponseEntity<DisciplineDTO> create(
             @Parameter(description = "Название дисциплины")
             @RequestBody String name) {
@@ -123,7 +122,7 @@ public class DisciplineController {
 
     @Operation(summary = "Получить количество занятий дисциплины", description = "Возвращает общее количество занятий дисциплины")
     @ApiResponse(responseCode = "200", description = "Количество занятий успешно получено")
-    @GetMapping("/lessons-count/{disciplineId}")
+    @GetMapping("/lessonsCount/{disciplineId}")
     public Map<String, Integer> getLessonCount(
             @Parameter(description = "ID дисциплины", example = "1")
             @PathVariable(name = "disciplineId") Integer disciplineId) {
@@ -133,7 +132,7 @@ public class DisciplineController {
 
     @Operation(summary = "Получить занятия дисциплины по диапазону дат", description = "Возвращает список занятий дисциплины за указанный период")
     @ApiResponse(responseCode = "200", description = "Занятия найдены")
-    @GetMapping("/lessons-by-date-range")
+    @GetMapping("/lessonsByDateRange")
     public ResponseEntity<?> getLessonsByDateRange(
             @Parameter(description = "ID дисциплины", example = "1")
             @RequestParam(name = "disciplineId") Integer disciplineId,
@@ -152,7 +151,7 @@ public class DisciplineController {
             @ApiResponse(responseCode = "200", description = "Занятия дисциплины найдены"),
             @ApiResponse(responseCode = "404", description = "Дисциплина не найдена")
     })
-    @GetMapping("/by-id/{disciplineId}/lessons-with-teacher")
+    @GetMapping("/findById/{disciplineId}/lessonsWithTeacher")
     public ResponseEntity<List<LessonDTO>> getLessonsWithTeacher(
             @Parameter(description = "ID дисциплины", example = "1")
             @PathVariable(name = "disciplineId") Integer disciplineId) throws com.sport.project.exception.EntityNotFoundException {
@@ -161,7 +160,7 @@ public class DisciplineController {
 
     @Operation(summary = "Проверить возможность удаления дисциплины", description = "Возвращает можно ли удалить дисциплину")
     @ApiResponse(responseCode = "200", description = "Дисциплина может быть удалена")
-    @GetMapping("/can-delete/{disciplineId}")
+    @GetMapping("/canDelete/{disciplineId}")
     public boolean canDelete(
             @Parameter(description = "ID дисциплина", example = "1")
             @PathVariable(name = "disciplineId") Integer disciplineId) throws EntityNotFoundException {
@@ -186,7 +185,7 @@ public class DisciplineController {
             @ApiResponse(responseCode = "204", description = "Дисциплина успешно удалена"),
             @ApiResponse(responseCode = "404", description = "Дисциплина не найдена")
     })
-    @DeleteMapping("/delete-by-name")
+    @DeleteMapping("/deleteByName")
     public ResponseEntity<Void> deleteByName(
             @Parameter(description = "Название дисциплины", example = "Физическая культура и спорт")
             @RequestParam(name = "disciplineName") String disciplineName) throws EntityNotFoundException {
