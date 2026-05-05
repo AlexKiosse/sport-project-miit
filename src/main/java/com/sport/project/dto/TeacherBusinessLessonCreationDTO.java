@@ -16,18 +16,14 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class TeacherBusinessLessonCreationDTO {
 
+    private Integer teacherId;
     private String groupName;
 
-    @JsonDeserialize(using = LocalTimeDeserializer.class)
-    LocalDate dateOfLesson;
+    private LocalDate dateOfLesson;
 
     @JsonSerialize(using = LocalTimeSerializer.class)
     private LocalTime startAt;
 
     @JsonDeserialize(using = LocalTimeDeserializer.class)
     private LocalTime endAt;
-
-    private String firstName;
-    private String lastName;
-    private String patronymic;
 }

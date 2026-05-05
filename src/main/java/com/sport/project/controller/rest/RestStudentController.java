@@ -22,7 +22,7 @@ import java.util.Map;
  */
 @Tag(name = "Студенты", description = "API для управления студентами")
 @RestController
-@RequestMapping(path = "/students")
+@RequestMapping(path = "/api/students")
 @RequiredArgsConstructor
 public class RestStudentController {
 

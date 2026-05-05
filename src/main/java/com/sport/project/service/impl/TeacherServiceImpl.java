@@ -1,15 +1,15 @@
 package com.sport.project.service.impl;
 
-import com.sport.project.dao.entity.LessonsEntity;
-import com.sport.project.dao.entity.TeacherEntity;
-import com.sport.project.dao.repository.LessonsRepository;
-import com.sport.project.dao.repository.TeacherRepository;
+import com.sport.project.dao.entity.*;
+import com.sport.project.dao.repository.*;
+import com.sport.project.dto.TeacherBusinessLessonCreationDTO;
 import com.sport.project.dto.TeacherCreationDTO;
 import com.sport.project.dto.TeacherDTO;
 import com.sport.project.exception.EntityAlreadyExistsException;
 import com.sport.project.exception.EntityNotFoundException;
 import com.sport.project.mapper.Mapper;
 import com.sport.project.service.TeacherService;
+import com.sport.project.service.interfaces.teacher.TeacherBusinessService;
 import com.sport.project.service.interfaces.teacher.TeacherCreationService;
 import com.sport.project.service.interfaces.teacher.TeacherDeletingService;
 import com.sport.project.service.interfaces.teacher.TeacherUpdatingService;
@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -28,10 +29,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class TeacherServiceImpl implements
-        TeacherService, TeacherCreationService, TeacherDeletingService, TeacherUpdatingService {
+        TeacherService, TeacherCreationService, TeacherDeletingService, TeacherUpdatingService, TeacherBusinessService {
 
     private final TeacherRepository teacherRepository;
+    private final StudentRepository studentRepository;
     private final LessonsRepository lessonsRepository;
+    private final VisitsRepository visitsRepository;
+    private final GroupRepository groupRepository;
+    private final DisciplineRepository disciplineRepository;
 
     @Override
     public TeacherDTO findById(Integer id) throws EntityNotFoundException {
@@ -211,5 +216,47 @@ public class TeacherServiceImpl implements
 
         teacher.setModerator(moderator);
         log.info("Updated moderator status for teacher {}: {}", login, moderator);
+    }
+
+    @Override
+    @Transactional
+    public void createLessonForFuture(TeacherBusinessLessonCreationDTO dto) {
+        TeacherEntity teacher = teacherRepository.findById(dto.getTeacherId())
+                .orElseThrow(() -> new EntityNotFoundException("Teacher not found with id: " + dto.getTeacherId()));
+
+        DisciplineEntity discipline = disciplineRepository.findByName("Физическая культура и спорт")
+                .orElseThrow(() -> new EntityNotFoundException("Discipline not found with name 'Физическая культура и спорт'"));
+
+        GroupEntity group = groupRepository.findByName(dto.getGroupName())
+                .orElseThrow(() -> new EntityNotFoundException("Group not found with name: " + dto.getGroupName()));
+
+        LessonsEntity lesson = new LessonsEntity();
+        lesson.setTeacher(teacher);
+        lesson.setDateOfLesson(dto.getDateOfLesson());
+        lesson.setDiscipline(discipline);
+
+        lesson.setVisits(new ArrayList<>());
+
+        if (dto.getStartAt() != null && dto.getEndAt() != null) {
+            lesson.setStartAt(dto.getStartAt());
+            lesson.setEndAt(dto.getEndAt());
+        }
+
+        LessonsEntity savedLesson = lessonsRepository.save(lesson);
+
+        List<StudentEntity> students = studentRepository.findByGroupId(group.getId());
+
+        for (StudentEntity student : students) {
+            VisitsEntity visit = new VisitsEntity();
+            visit.setStudent(student);
+            visit.setLessons(savedLesson);
+            visit.setExists(false);
+            visitsRepository.save(visit);
+
+            savedLesson.addVisit(visit);
+        }
+
+        log.info("Created future lesson for group: {}, date: {}, students count: {}",
+                group.getName(), dto.getDateOfLesson(), students.size());
     }
 }

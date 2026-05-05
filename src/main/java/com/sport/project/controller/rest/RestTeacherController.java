@@ -1,8 +1,8 @@
 package com.sport.project.controller.rest;
 
+import com.sport.project.dto.TeacherBusinessLessonCreationDTO;
 import com.sport.project.dto.TeacherCreationDTO;
 import com.sport.project.dto.TeacherDTO;
-import com.sport.project.exception.EntityNotFoundException;
 import com.sport.project.service.impl.TeacherServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Tag(name = "Преподаватели", description = "API для управления преподавателями")
 @RestController
-@RequestMapping(path = "/teachers")
+@RequestMapping(path = "/api/teachers")
 @RequiredArgsConstructor
 @Slf4j
 public class RestTeacherController {
@@ -175,5 +175,26 @@ public class RestTeacherController {
             @RequestParam(value = "moderator") boolean moderator) {
         teacherService.updateModerator(login, moderator);
         return ResponseEntity.ok("Moderator status updated for teacher: " + login + " -> " + moderator);
+    }
+
+    @Operation(summary = "Создать занятие для группы на будущую дату",
+            description = "Создает занятие для группы и автоматически создает записи посещений для всех студентов с isExists = false")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Занятие успешно создано"),
+            @ApiResponse(responseCode = "404", description = "Преподаватель, дисциплина или группа не найдены"),
+            @ApiResponse(responseCode = "400", description = "Некорректные данные запроса")
+    })
+    @PostMapping("/create-lesson-for-future")
+    public ResponseEntity<String> createLessonForFuture(
+            @Parameter(description = "Данные для создания занятия")
+            @RequestBody TeacherBusinessLessonCreationDTO dto) {
+
+        teacherService.createLessonForFuture(dto);
+
+        return ResponseEntity.ok(String.format(
+                "Lesson created for group ID: %s on date: %s with 'not attended' status for all students",
+                dto.getGroupName(),
+                dto.getDateOfLesson()
+        ));
     }
 }
