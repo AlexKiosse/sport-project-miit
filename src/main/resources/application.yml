@@ -1,5 +1,7 @@
 server:
   port: 4444
+  # слушать все интерфейсы (доступ с других машин в LAN)
+  address: 0.0.0.0
   error:
     path: "/error"
     whitelabel:
@@ -28,7 +30,7 @@ spring:
       jdbc-url: jdbc:postgresql://localhost:${POSTGRES_DB_PORT:5432}/${POSTGRES_DB:all-on-sport}
       driver-class-name: "org.postgresql.Driver"
       username: ${POSTGRES_USER:postgres}
-      password: ${POSTGRES_PASSWORD:postgres}
+      password: ${POSTGRES_PASSWORD:2070}
       connection-timeout: 30000
       maximum-pool-size: 15
       minimum-idle: 10
