@@ -24,7 +24,7 @@ public class OpenApiConfig {
                                 "учёт студентов, преподавателей, групп, дисциплин, занятий и посещаемости"))
                 .servers(List.of(
                         new Server()
-                                .url("http://localhost:4444")
+                                .url("/")
                                 .description("Local Development Server")
                 ));
     }
