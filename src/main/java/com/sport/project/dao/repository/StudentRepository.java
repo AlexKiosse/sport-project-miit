@@ -24,6 +24,8 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
     //Вывод всех студентов, у которых есть секция sectionName
     List<StudentEntity> findBySectionName(String sectionName);
 
+    List<StudentEntity> findByFullName_FirstNameAndFullName_LastName(String firstName, String lastName);
+
     //Вывод всех студентов, конкретного занятия по конкретной дате (если гр и гр здор подтянется без join)
     @Query("""
             SELECT student FROM student_entity student

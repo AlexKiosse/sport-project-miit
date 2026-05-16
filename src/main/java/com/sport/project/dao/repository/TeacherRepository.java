@@ -24,6 +24,9 @@ public interface TeacherRepository extends JpaRepository<TeacherEntity, Integer>
     List<TeacherEntity> findByFullNameFirstNameAndFullNameLastName(
             String firstName, String lastName);
 
+    List<TeacherEntity> findByFullName_FirstNameAndFullName_LastName(String firstName, String lastName);
+
+
     List<TeacherEntity> findByFullNameFirstNameAndFullNameLastNameAndFullNamePatronymic(
             String firstName, String lastName, String patronymic);
 

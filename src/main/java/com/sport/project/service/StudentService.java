@@ -40,6 +40,16 @@ public interface StudentService {
      */
     List<StudentDTO> findByFullName(String firstName, String lastName, String patronymic) throws EntityNotFoundException;
 
+
+    /**
+     * Получение студентов по фамилии и имени
+     * @param firstName имя
+     * @param lastName фамилия
+     * @return данные студента
+     * @throws EntityNotFoundException если студент не найден
+     */
+    List<StudentDTO> findByFirstNameAndLastName(String firstName, String lastName);
+
     /**
      * Получение всех студентов.
      *

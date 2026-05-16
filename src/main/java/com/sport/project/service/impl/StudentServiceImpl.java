@@ -60,6 +60,14 @@ public class StudentServiceImpl implements
     }
 
     @Override
+    public List<StudentDTO> findByFirstNameAndLastName(String firstName, String lastName) {
+        return this.studentRepository.findByFullName_FirstNameAndFullName_LastName(firstName, lastName)
+                .stream()
+                .map(Mapper::map)
+                .toList();
+    }
+
+    @Override
     public List<StudentDTO> findAll() {
         return this.studentRepository
                 .findAll()

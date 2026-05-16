@@ -64,6 +64,14 @@ public class TeacherServiceImpl implements
     }
 
     @Override
+    public List<TeacherDTO> findByFirstNameAndLastName(String firstName, String lastName) throws EntityNotFoundException {
+        return this.teacherRepository.findByFullName_FirstNameAndFullName_LastName(firstName, lastName)
+                .stream()
+                .map(Mapper::map)
+                .toList();
+    }
+
+    @Override
     public List<TeacherDTO> findAll() {
         return this.teacherRepository
                 .findAll()

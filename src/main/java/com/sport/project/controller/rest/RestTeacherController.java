@@ -78,6 +78,18 @@ public class RestTeacherController {
         return this.teacherService.findByLessonsDate(date);
     }
 
+    // Добавлено через Claude
+    @Operation(summary = "Получить преподавателей по имени и фамилии", description = "Возвращает список преподавателей по имени и фамилии")
+    @ApiResponse(responseCode = "200", description = "Преподаватели найдены")
+    @GetMapping(path = "/find-by-first-name-last-name")
+    public List<TeacherDTO> findByFirstNameAndLastName(
+            @Parameter(description = "Имя преподавателя", example = "Пётр")
+            @RequestParam(name = "first-name") String firstName,
+            @Parameter(description = "Фамилия преподавателя", example = "Петров")
+            @RequestParam(name = "last-name") String lastName) {
+        return this.teacherService.findByFirstNameAndLastName(firstName, lastName);
+    }
+
     @Operation(summary = "Проверить существование преподавателя по логину", description = "Проверяет существование преподавателя по логину")
     @ApiResponse(responseCode = "200", description = "Результат проверки")
     @GetMapping(path = "/is-exists-by-login")

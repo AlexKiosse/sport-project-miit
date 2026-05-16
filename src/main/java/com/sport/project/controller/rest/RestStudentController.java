@@ -87,6 +87,18 @@ public class RestStudentController {
         return this.studentService.findBySection(sectionId);
     }
 
+    // Добавлено через Claude
+    @Operation(summary = "Получить студентов по имени и фамилии", description = "Возвращает список студентов по имени и фамилии")
+    @ApiResponse(responseCode = "200", description = "Студенты найдены")
+    @GetMapping(path = "/find-by-first-name-last-name")
+    public List<StudentDTO> findByFirstNameAndLastName(
+            @Parameter(description = "Имя студента", example = "Иван")
+            @RequestParam(name = "first-name") String firstName,
+            @Parameter(description = "Фамилия студента", example = "Иванов")
+            @RequestParam(name = "last-name") String lastName) {
+        return this.studentService.findByFirstNameAndLastName(firstName, lastName);
+    }
+
     @Operation(summary = "Проверить существование студента по логину", description = "Проверяет существование студента по логину")
     @ApiResponse(responseCode = "200", description = "Результат проверки")
     @GetMapping(path = "/is-exists-by-login")
